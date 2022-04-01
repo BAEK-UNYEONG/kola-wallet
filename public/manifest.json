@@ -1,0 +1,30 @@
+{
+  "name": "Kola Wallet",
+  "description": "Kola Wallet by Vue.js",
+  "icons": {
+    "16": "kola.png",
+    "48": "kola.png",
+    "128": "kola.png"
+  },
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*.*",
+        "file:///*/*.*"
+      ],
+      "css": [
+        "style.css"
+      ],
+      "js": [
+        "script.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}

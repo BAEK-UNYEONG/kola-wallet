@@ -1,0 +1,23 @@
+{
+  "name": "kola-wallet",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite build --watch",
+    "build": "bestzip dist.zip dist/",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.2.25",
+    "vue-clipboard2": "^0.3.3",
+    "vue-router": "^4.0.14",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.2.0",
+    "bestzip": "^2.2.0",
+    "sass": "^1.49.10",
+    "vite": "^2.8.0"
+  }
+}
