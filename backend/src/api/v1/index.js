@@ -35,7 +35,7 @@ const newAddress = async (keystore, password = '') => await new Promise((resolve
   })
 })
 
-api.get('/generate', async (ctx, next) => {
+api.get('/generate', async ctx => {
   const {mnemonic, password} = ctx.query
   let address, pureMnemonic, privateKey, keystore, keystoreJsonDataLink, fileName
   try {
@@ -51,13 +51,11 @@ api.get('/generate', async (ctx, next) => {
   }
   ctx.status = 200
   ctx.body = {
-    data: {
-      address,
-      pureMnemonic,
-      privateKey,
-      keystoreJsonDataLink,
-      fileName,
-    },
+    address,
+    mnemonic: pureMnemonic,
+    privateKey,
+    keystoreJsonDataLink,
+    fileName,
   }
 })
 

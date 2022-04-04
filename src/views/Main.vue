@@ -84,12 +84,21 @@
 </style>
 
 <script>
-import CustomButton from '../components/common/CustomButton.vue';
+import CustomButton from '../components/common/CustomButton.vue'
+import {mapActions} from 'vuex'
 
 export default {
   name: 'Main',
   components: {
     CustomButton,
-  }
+  },
+  async mounted() {
+    if (this.isLogged) {
+      await this.$router.push('/main')
+    }
+  },
+  computed: {
+    ...mapActions(['isLogged']),
+  },
 }
 </script>

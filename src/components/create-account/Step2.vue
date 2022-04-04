@@ -119,10 +119,11 @@
 </style>
 
 <script>
-import CustomAlert from '../common/CustomAlert.vue';
+import CustomAlert from '../common/CustomAlert.vue'
 import CustomInput from '../common/CustomInput.vue'
-import CustomButtonGroup from '../common/CustomButtonGroup.vue';
-import CustomButton from '../common/CustomButton.vue';
+import CustomButtonGroup from '../common/CustomButtonGroup.vue'
+import CustomButton from '../common/CustomButton.vue'
+import {mapGetters} from 'vuex'
 
 const TIMEOUT_SECONDS = 4
 
@@ -146,22 +147,9 @@ export default {
     this.clearTimer()
   },
   computed: {
+    ...mapGetters(['mnemonic']),
     seeds() {
-      // dummy
-      return [
-        'never',
-        'helmet',
-        'pet',
-        'salmon',
-        'head',
-        'squeeze',
-        'desk',
-        'circle',
-        'camp',
-        'rude',
-        'recycle',
-        'hat',
-      ]
+      return this.mnemonic.split(' ')
     },
   },
   methods: {
@@ -184,7 +172,7 @@ export default {
       this.isConfirmedSeedPhrase = true
     },
     onClickCopyClipboard() {
-      this.$copyText(this.seeds.join(' '))
+      this.$copyText(this.mnemonic)
     },
     onClickGoBack() {
       this.$emit('onClickGoBack')

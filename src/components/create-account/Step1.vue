@@ -70,10 +70,11 @@
 </style>
 
 <script>
-
 import CustomInput from '../common/CustomInput.vue'
-import CustomButtonGroup from '../common/CustomButtonGroup.vue';
-import CustomButton from '../common/CustomButton.vue';
+import CustomButtonGroup from '../common/CustomButtonGroup.vue'
+import CustomButton from '../common/CustomButton.vue'
+import KolaWalletAPI from '../../api/KolaWalletAPI'
+import {mapMutations} from 'vuex'
 
 export default {
   name: 'CreateAccountStep1',
@@ -91,6 +92,7 @@ export default {
     await this.$refs.password.focusIn()
   },
   methods: {
+    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC']),
     async onClickCreateWallet() {
       if (this.password === '') {
         alert('비밀번호를 입력하지 않았습니다.')
@@ -107,7 +109,12 @@ export default {
         await this.$refs.password.focusIn()
         return
       }
-
+      const {
+        address,
+        mnemonic,
+      } = await KolaWalletAPI.generate()
+      this.SET_ADDRESS(address)
+      this.SET_MNEMONIC(mnemonic)
       this.$emit('onClickGoTo', 2)
     },
   },
