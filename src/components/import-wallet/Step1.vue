@@ -1,6 +1,31 @@
 <template>
   <div class='content'>
-    <h2>Create a New Wallet</h2>
+    <h2>
+      Import a wallet
+      <br>
+      using seed phrase
+    </h2>
+    <custom-alert type='error'>
+      <p>각 문구를 공백으로 구분해주세요.</p>
+      <p>(예: half pave catalog...)</p>
+    </custom-alert>
+    <h5>
+      여기에 12 단어의 비밀 문구를 입력하여
+      <br>
+      지갑을 복원하세요.
+    </h5>
+    <section class='input-box'>
+      <custom-input
+        ref='secretRecoveryPhrase'
+        :type='hasVisibleSecretRecoveryPhrase ? "password" : "text"'
+        :content='secretRecoveryPhrase'
+        placeholder='SECRET RECOVERY PHRASE'
+        width='240px'
+        :before-icon='["bx", hasVisibleSecretRecoveryPhrase ? "bx-hide" : "bx-show-alt"]'
+        @update:content='v => secretRecoveryPhrase = v'
+        @onClickIcon='hasVisibleSecretRecoveryPhrase = !hasVisibleSecretRecoveryPhrase'
+      />
+    </section>
     <section class='input-box'>
       <custom-input
         ref='password'
@@ -47,10 +72,14 @@
   margin: -50px 0 10px;
   z-index: 1;
 
-  > h2 {
+  > h2, > h5 {
     margin: 0;
     color: #fff;
     text-align: center;
+  }
+
+  > h5 {
+    font-weight: normal;
   }
 
   > p {
@@ -71,6 +100,7 @@
 </style>
 
 <script>
+import CustomAlert from '../common/CustomAlert.vue'
 import CustomInput from '../common/CustomInput.vue'
 import CustomButtonGroup from '../common/CustomButtonGroup.vue'
 import CustomButton from '../common/CustomButton.vue'
@@ -78,23 +108,36 @@ import KolaWalletAPI from '../../api/KolaWalletAPI'
 import {mapMutations} from 'vuex'
 
 export default {
-  name: 'CreateAccountStep1',
+  name: 'ImportWalletStep1',
   components: {
+    CustomAlert,
     CustomInput,
     CustomButtonGroup,
     CustomButton,
   },
   data: () => ({
+    secretRecoveryPhrase: '',
     password: '',
     confirmPassword: '',
+    hasVisibleSecretRecoveryPhrase: true,
     hasVisiblePassword: true,
   }),
   async mounted() {
-    await this.$refs.password.focusIn()
+    await this.$refs.secretRecoveryPhrase.focusIn()
   },
   methods: {
     ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC']),
     async onClickCreateWallet() {
+      if (this.secretRecoveryPhrase === '') {
+        alert('비밀 복구 구문을 입력하지 않았습니다.')
+        await this.$refs.secretRecoveryPhrase.focusIn()
+        return
+      }
+      if (this.secretRecoveryPhrase.trim().split(' ').length < 12) {
+        alert('정상적인 비밀 복구 구문이 아닙니다.')
+        await this.$refs.secretRecoveryPhrase.focusIn()
+        return
+      }
       if (this.password === '') {
         alert('비밀번호를 입력하지 않았습니다.')
         await this.$refs.password.focusIn()
@@ -114,7 +157,8 @@ export default {
         address,
         mnemonic,
       } = await KolaWalletAPI.generate({
-        password: this.password
+        password: this.password,
+        mnemonic: this.secretRecoveryPhrase,
       })
       this.SET_ADDRESS(address)
       this.SET_MNEMONIC(mnemonic)

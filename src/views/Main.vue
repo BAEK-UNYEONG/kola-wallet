@@ -16,7 +16,10 @@
       >
         Get Wallet
       </custom-button>
-      <custom-button block>
+      <custom-button
+        to='/import-wallet'
+        block
+      >
         Import Wallet
       </custom-button>
     </div>

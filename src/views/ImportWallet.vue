@@ -82,18 +82,14 @@
 import CustomInput from '../components/common/CustomInput.vue'
 import CustomButtonGroup from '../components/common/CustomButtonGroup.vue'
 import CustomButton from '../components/common/CustomButton.vue'
-import CreateAccountStep1 from '../components/create-account/Step1.vue'
-import CreateAccountStep2 from '../components/create-account/Step2.vue'
-import CreateAccountStep3 from '../components/create-account/Step3.vue'
+import ImportWalletStep1 from '../components/import-wallet/Step1.vue'
 
 const createAccountComponents = [
-  CreateAccountStep1,
-  CreateAccountStep2,
-  CreateAccountStep3,
+  ImportWalletStep1,
 ]
 
 export default {
-  name: 'CreateAccount',
+  name: 'ImportWallet',
   components: {
     CustomInput,
     CustomButtonGroup,

@@ -123,7 +123,7 @@ import CustomAlert from '../common/CustomAlert.vue'
 import CustomInput from '../common/CustomInput.vue'
 import CustomButtonGroup from '../common/CustomButtonGroup.vue'
 import CustomButton from '../common/CustomButton.vue'
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 
 const TIMEOUT_SECONDS = 15
 
@@ -153,6 +153,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC']),
     autoBlurSeedBox() {
       this.timer = setTimeout(() => {
         this.isBlurredSeedBox = true
@@ -178,8 +179,7 @@ export default {
       this.$emit('onClickGoBack')
     },
     onClickConfirmSeedPhrase() {
-
-
+      this.SET_MNEMONIC()
       this.$emit('onClickGoTo', 3)
     },
   },
