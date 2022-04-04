@@ -93,9 +93,9 @@ export default {
     CustomButton,
   },
   async mounted() {
-    if (this.isLogged) {
-      await this.$router.push('/main')
-    }
+    // if (this.isLogged) {
+    //   await this.$router.push('/main')
+    // }
   },
   computed: {
     ...mapActions(['isLogged']),

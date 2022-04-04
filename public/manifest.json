@@ -8,6 +8,10 @@
   },
   "version": "0.0.1",
   "manifest_version": 3,
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
   "action": {
     "default_popup": "index.html"
   }
