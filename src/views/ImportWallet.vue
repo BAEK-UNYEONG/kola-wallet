@@ -83,9 +83,11 @@ import CustomInput from '../components/common/CustomInput.vue'
 import CustomButtonGroup from '../components/common/CustomButtonGroup.vue'
 import CustomButton from '../components/common/CustomButton.vue'
 import ImportWalletStep1 from '../components/import-wallet/Step1.vue'
+import ImportWalletStep2 from '../components/import-wallet/Step2.vue'
 
 const createAccountComponents = [
   ImportWalletStep1,
+  ImportWalletStep2,
 ]
 
 export default {

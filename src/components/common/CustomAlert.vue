@@ -35,6 +35,7 @@
     flex: 1;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     > p {
       margin: 0;
