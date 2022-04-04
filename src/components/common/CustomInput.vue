@@ -217,7 +217,6 @@ export default {
         if (this.$attrs.max < this.currentContent)
           this.currentContent = this.$attrs.max
       }
-      console.log(this.currentContent)
       this.$emit('update:content', this.currentContent)
       this.$emit(this.isStore ? 'update' : 'update:content', this.currentContent)
     },

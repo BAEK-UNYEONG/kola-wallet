@@ -125,7 +125,7 @@ import CustomButtonGroup from '../common/CustomButtonGroup.vue'
 import CustomButton from '../common/CustomButton.vue'
 import {mapGetters} from 'vuex'
 
-const TIMEOUT_SECONDS = 4
+const TIMEOUT_SECONDS = 15
 
 export default {
   name: 'CreateAccountStep2',

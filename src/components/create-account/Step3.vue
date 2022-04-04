@@ -21,9 +21,9 @@
 </style>
 
 <script>
-import CustomAlert from '../common/CustomAlert.vue';
-import CustomButtonGroup from '../common/CustomButtonGroup.vue';
-import CustomButton from '../common/CustomButton.vue';
+import CustomAlert from '../common/CustomAlert.vue'
+import CustomButtonGroup from '../common/CustomButtonGroup.vue'
+import CustomButton from '../common/CustomButton.vue'
 
 export default {
   name: 'CreateAccountStep3',
