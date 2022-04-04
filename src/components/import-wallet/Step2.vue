@@ -2,7 +2,6 @@
   <div class='content'>
     <custom-alert>
       <p>지갑을 복구했습니다!</p>
-      <p>지갑을 복구했습니다!</p>
     </custom-alert>
     <custom-button-group>
       <custom-button to='/main' primary>

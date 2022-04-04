@@ -57,7 +57,7 @@
         primary
         @click='onClickCreateWallet'
       >
-        Create Wallet
+        Import Wallet
       </custom-button>
     </custom-button-group>
   </div>
