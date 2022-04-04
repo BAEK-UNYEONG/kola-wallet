@@ -5,125 +5,11 @@
       Kola Wallet
     </div>
     <div class='logo'/>
-    <!-- TODO : 컴포넌트 step 별로 분리 예정 -->
-    <div
-      v-if='step === 1'
-      class='content'
-    >
-      <h2>Create a New Wallet</h2>
-      <section class='input-box'>
-        <custom-input
-          ref='password'
-          :type='hasVisiblePassword ? "password" : "text"'
-          :content.sync='password'
-          placeholder='ENTER PASSWORD'
-          width='240px'
-          :before-icon='["bx", hasVisiblePassword ? "bx-hide" : "bx-show-alt"]'
-          @onClickIcon='hasVisiblePassword = !hasVisiblePassword'
-        />
-        <custom-input
-          ref='confirmPassword'
-          :type='hasVisiblePassword ? "password" : "text"'
-          :content.sync='confirmPassword'
-          placeholder='CONFIRM PASSWORD'
-          width='240px'
-          :before-icon='["bx", hasVisiblePassword ? "bx-hide" : "bx-show-alt"]'
-          @onClickIcon='hasVisiblePassword = !hasVisiblePassword'
-        />
-      </section>
-      <custom-button-group>
-        <custom-button to='/' flat>
-          <i class='bx bx-arrow-back'/>
-          Go Back
-        </custom-button>
-        <custom-button
-          primary
-          @click='onClickCreateWallet'
-        >
-          Create Wallet
-        </custom-button>
-      </custom-button-group>
-    </div>
-    <div
-      v-if='step === 2'
-      class='content'
-    >
-      <h2>Create a New Wallet</h2>
-      <section class='alert-box'>
-        <div class='icon'>
-          <i class='bx bx-error'/>
-        </div>
-        <div class='content'>
-          <p>비밀 복구 구문을 적어 안전한 곳에 보관하세요.</p>
-          <p>이 문구는 절대 누구에게도 주지 마세요!</p>
-        </div>
-      </section>
-      <section class='view-seed-box'>
-        <div
-          v-if='isBlurredSeedBox'
-          class='blur'
-        >
-          <custom-button
-            primary
-            @click='onClickRevealSeedPhrase'
-          >
-            <i class='bx bx-show'/>
-            Reveal Seed Phrase
-          </custom-button>
-        </div>
-        <div class='item-box'>
-          <div
-            v-for='(item, index) in seeds' :key='index'
-            class='item'
-          >
-            {{ item }}
-          </div>
-        </div>
-        <div class='copy-box'>
-          <custom-button
-            flat
-            @click='onClickCopyClipboard'
-          >
-            <i class='bx bx-copy'/>
-            Copy to Clipboard
-          </custom-button>
-        </div>
-      </section>
-      <custom-button-group>
-        <custom-button
-          flat
-          @click='onClickGoBack'
-        >
-          <i class='bx bx-arrow-back'/>
-          Go Back
-        </custom-button>
-        <custom-button
-          primary
-          @click='onClickConfirmSeedPhrase'
-        >
-          Confirm Seed Phrase
-        </custom-button>
-      </custom-button-group>
-    </div>
-    <div
-      v-if='step === 3'
-      class='content'
-    >
-      <section class='info-box'>
-        <div class='icon'>
-          <i class='bx bx-info-circle'/>
-        </div>
-        <div class='content'>
-          <p>지갑이 생성되었습니다!</p>
-          <p>비밀 복구 구문은 절대 복구할 수 없습니다.</p>
-        </div>
-      </section>
-      <custom-button-group>
-        <custom-button to='/' primary>
-          Confirm
-        </custom-button>
-      </custom-button-group>
-    </div>
+    <component
+      :is='viewComponent'
+      @onClickGoTo='onClickGoTo'
+      @onClickGoBack='onClickGoBack'
+    />
   </div>
 </template>
 
@@ -275,6 +161,15 @@
 import CustomInput from "../components/common/CustomInput.vue"
 import CustomButtonGroup from "../components/common/CustomButtonGroup.vue"
 import CustomButton from "../components/common/CustomButton.vue"
+import CreateAccountStep1 from "../components/create-account/Step1.vue"
+import CreateAccountStep2 from "../components/create-account/Step2.vue"
+import CreateAccountStep3 from "../components/create-account/Step3.vue"
+
+const createAccountComponents = [
+  CreateAccountStep1,
+  CreateAccountStep2,
+  CreateAccountStep3,
+]
 
 export default {
   name: "CreateAccount",
@@ -288,52 +183,18 @@ export default {
     password: '',
     confirmPassword: '',
     hasVisiblePassword: false,
-    isBlurredSeedBox: true,
   }),
   computed: {
-    seeds() {
-      // dummy
-      return [
-        'never',
-        'helmet',
-        'pet',
-        'salmon',
-        'head',
-        'squeeze',
-        'desk',
-        'circle',
-        'camp',
-        'rude',
-        'recycle',
-        'hat',
-      ]
+    viewComponent() {
+      return createAccountComponents[this.step - 1]
     },
   },
-  async mounted() {
-    this.autoBlurSeedBox()
-    await this.$refs.password.focusIn()
-  },
   methods: {
-    autoBlurSeedBox() {
-      setTimeout(() => {
-        this.isBlurredSeedBox = true
-        this.autoBlurSeedBox()
-      }, 15000)
+    onClickGoTo(to) {
+      this.step = to
     },
     onClickGoBack() {
       if (this.step > 1) this.step -= 1
-    },
-    onClickCreateWallet() {
-      this.step = 2
-    },
-    onClickConfirmSeedPhrase() {
-      this.step = 3
-    },
-    onClickRevealSeedPhrase() {
-      this.isBlurredSeedBox = false
-    },
-    onClickCopyClipboard() {
-      this.$copyText(this.seeds.join(' '))
     },
   },
 }
