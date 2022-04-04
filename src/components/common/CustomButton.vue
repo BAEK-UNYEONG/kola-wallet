@@ -5,14 +5,15 @@
       block && 'block',
       flat && 'flat',
       primary && 'primary',
+      disabled && 'disabled',
     ]"
-    @click="onClickButton"
+    @click='onClickButton'
   >
     <slot/>
   </div>
 </template>
 
-<style lang="scss">
+<style lang='scss'>
 .custom-button {
   display: flex;
   align-items: center;
@@ -35,11 +36,13 @@
     background: transparent;
     color: #CC4E8E;
     box-shadow: none;
+
     &:hover {
       background: #CC4E8E44;
       color: #fff;
       font-weight: normal;
     }
+
     &:active {
       background: #CC4E8E22;
       color: #1a1a1b;
@@ -54,6 +57,11 @@
     background: #CC4E8E;
   }
 
+  &.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+
   > i {
     margin-right: 5px;
   }
@@ -62,7 +70,7 @@
 
 <script>
 export default {
-  name: "CustomButton",
+  name: 'CustomButton',
   props: {
     to: {
       type: String,
@@ -79,7 +87,11 @@ export default {
     primary: {
       type: Boolean,
       default: false,
-    }
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     onClickButton() {

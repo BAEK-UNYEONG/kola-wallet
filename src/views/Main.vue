@@ -84,10 +84,10 @@
 </style>
 
 <script>
-import CustomButton from "../components/common/CustomButton.vue";
+import CustomButton from '../components/common/CustomButton.vue';
 
 export default {
-  name: "Main",
+  name: 'Main',
   components: {
     CustomButton,
   }

@@ -5,19 +5,21 @@
       <custom-input
         ref='password'
         :type='hasVisiblePassword ? "password" : "text"'
-        :content.sync='password'
+        :content='password'
         placeholder='ENTER PASSWORD'
         width='240px'
         :before-icon='["bx", hasVisiblePassword ? "bx-hide" : "bx-show-alt"]'
+        @update:content='v => password = v'
         @onClickIcon='hasVisiblePassword = !hasVisiblePassword'
       />
       <custom-input
         ref='confirmPassword'
         :type='hasVisiblePassword ? "password" : "text"'
-        :content.sync='confirmPassword'
+        :content='confirmPassword'
         placeholder='CONFIRM PASSWORD'
         width='240px'
         :before-icon='["bx", hasVisiblePassword ? "bx-hide" : "bx-show-alt"]'
+        @update:content='v => confirmPassword = v'
         @onClickIcon='hasVisiblePassword = !hasVisiblePassword'
       />
     </section>
@@ -68,12 +70,13 @@
 </style>
 
 <script>
-import CustomInput from "../common/CustomInput.vue"
-import CustomButtonGroup from "../common/CustomButtonGroup.vue";
-import CustomButton from "../common/CustomButton.vue";
+
+import CustomInput from '../common/CustomInput.vue'
+import CustomButtonGroup from '../common/CustomButtonGroup.vue';
+import CustomButton from '../common/CustomButton.vue';
 
 export default {
-  name: "CreateAccountStep1",
+  name: 'CreateAccountStep1',
   components: {
     CustomInput,
     CustomButtonGroup,
@@ -88,9 +91,22 @@ export default {
     await this.$refs.password.focusIn()
   },
   methods: {
-    onClickCreateWallet() {
-
-
+    async onClickCreateWallet() {
+      if (this.password === '') {
+        alert('비밀번호를 입력하지 않았습니다.')
+        await this.$refs.password.focusIn()
+        return
+      }
+      if (this.confirmPassword === '') {
+        alert('비밀번호 확인을 입력하지 않았습니다.')
+        await this.$refs.confirmPassword.focusIn()
+        return
+      }
+      if (this.password !== this.confirmPassword) {
+        alert('입력한 비밀번호가 서로 일치하지 않습니다.')
+        await this.$refs.password.focusIn()
+        return
+      }
 
       this.$emit('onClickGoTo', 2)
     },

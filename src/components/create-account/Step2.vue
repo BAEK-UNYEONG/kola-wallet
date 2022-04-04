@@ -1,15 +1,10 @@
 <template>
   <div class='content'>
     <h2>Create a New Wallet</h2>
-    <section class='alert-box'>
-      <div class='icon'>
-        <i class='bx bx-error'/>
-      </div>
-      <div class='content'>
-        <p>비밀 복구 구문을 적어 안전한 곳에 보관하세요.</p>
-        <p>이 문구는 절대 누구에게도 주지 마세요!</p>
-      </div>
-    </section>
+    <custom-alert type='error'>
+      <p>비밀 복구 구문을 적어 안전한 곳에 보관하세요.</p>
+      <p>이 문구는 절대 누구에게도 주지 마세요!</p>
+    </custom-alert>
     <section class='view-seed-box'>
       <div
         v-if='isBlurredSeedBox'
@@ -51,6 +46,7 @@
       </custom-button>
       <custom-button
         primary
+        :disabled='!isConfirmedSeedPhrase'
         @click='onClickConfirmSeedPhrase'
       >
         Confirm Seed Phrase
@@ -73,15 +69,47 @@
     color: #fff;
   }
 
-  > p {
-    color: #fff;
-  }
-
-  > .input-box {
-    margin: 10px 0;
+  > .view-seed-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 320px;
+    margin: 0 0 10px;
     padding: 10px;
     background: #ffffff44;
     border-radius: 10px;
+    overflow: hidden;
+
+    > .blur {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      margin-top: -10px;
+      position: absolute;
+      background: #00000066;
+      backdrop-filter: blur(5px);
+    }
+
+    > .item-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      > .item {
+        display: flex;
+        justify-content: center;
+        width: 90px;
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 5px;
+        background-color: #fff;
+        font-size: 13px;
+        font-weight: bold;
+      }
+    }
   }
 
   > .custom-button-group {
@@ -91,22 +119,31 @@
 </style>
 
 <script>
-import CustomInput from "../common/CustomInput.vue"
-import CustomButtonGroup from "../common/CustomButtonGroup.vue";
-import CustomButton from "../common/CustomButton.vue";
+import CustomAlert from '../common/CustomAlert.vue';
+import CustomInput from '../common/CustomInput.vue'
+import CustomButtonGroup from '../common/CustomButtonGroup.vue';
+import CustomButton from '../common/CustomButton.vue';
+
+const TIMEOUT_SECONDS = 4
 
 export default {
-  name: "CreateAccountStep2",
+  name: 'CreateAccountStep2',
   components: {
+    CustomAlert,
     CustomInput,
     CustomButtonGroup,
     CustomButton,
   },
   data: () => ({
+    timer: null,
     isBlurredSeedBox: true,
+    isConfirmedSeedPhrase: false,
   }),
   async mounted() {
     this.autoBlurSeedBox()
+  },
+  async beforeUnmount() {
+    this.clearTimer()
   },
   computed: {
     seeds() {
@@ -129,13 +166,22 @@ export default {
   },
   methods: {
     autoBlurSeedBox() {
-      setTimeout(() => {
+      this.timer = setTimeout(() => {
         this.isBlurredSeedBox = true
         this.autoBlurSeedBox()
-      }, 15000)
+      }, TIMEOUT_SECONDS * 1000)
+    },
+    clearTimer() {
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
     },
     onClickRevealSeedPhrase() {
+      this.clearTimer()
+      this.autoBlurSeedBox()
       this.isBlurredSeedBox = false
+      this.isConfirmedSeedPhrase = true
     },
     onClickCopyClipboard() {
       this.$copyText(this.seeds.join(' '))

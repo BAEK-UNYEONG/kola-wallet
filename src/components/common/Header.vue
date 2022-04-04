@@ -117,7 +117,7 @@
 // import {mapGetters, mapActions} from "vuex";
 
 export default {
-  name: "Header",
+  name: 'Header',
   computed: {
     // ...mapGetters(["web3", "account", "balance"]),
   },

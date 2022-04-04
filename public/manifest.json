@@ -10,21 +10,5 @@
   "manifest_version": 3,
   "action": {
     "default_popup": "index.html"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "*://*/*.*",
-        "file:///*/*.*"
-      ],
-      "css": [
-        "style.css"
-      ],
-      "js": [
-        "script.js"
-      ],
-      "run_at": "document_start",
-      "all_frames": true
-    }
-  ]
+  }
 }
