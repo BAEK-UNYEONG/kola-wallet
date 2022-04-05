@@ -1,10 +1,10 @@
 import qs from 'qs'
 
 // export const PATH_NAME = 'account'
-const {VITE_DOMAIN} = import.meta.env
+const {VUE_DOMAIN} = process.env
 
 export function generate(args) {
-  return this.$api.get(`${VITE_DOMAIN}/api/v1/generate`, {
+  return this.$api.get(`${VUE_DOMAIN}/api/v1/generate`, {
       params: {
         password: args.password,
         mnemonic: args.mnemonic,

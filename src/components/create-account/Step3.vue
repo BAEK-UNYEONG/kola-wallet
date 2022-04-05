@@ -5,7 +5,7 @@
       <p>비밀 복구 구문은 절대 복구할 수 없습니다.</p>
     </custom-alert>
     <custom-button-group>
-      <custom-button to='/main' primary>
+      <custom-button to='/wallet/main' primary>
         Confirm
       </custom-button>
     </custom-button-group>

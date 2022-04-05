@@ -74,8 +74,9 @@
 import CustomInput from '../common/CustomInput.vue'
 import CustomButtonGroup from '../common/CustomButtonGroup.vue'
 import CustomButton from '../common/CustomButton.vue'
-import KolaWalletAPI from '../../api/KolaWalletAPI'
+import {generateAccount} from '../../utils/wallet'
 import {mapMutations} from 'vuex'
+import Wallet from 'yoethwallet'
 
 export default {
   name: 'CreateAccountStep1',
@@ -113,7 +114,7 @@ export default {
       const {
         address,
         mnemonic,
-      } = await KolaWalletAPI.generate({
+      } = await generateAccount({
         password: this.password
       })
       this.SET_ADDRESS(address)

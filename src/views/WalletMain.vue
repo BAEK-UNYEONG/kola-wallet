@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <div class='title'>
-      Kola Wallet
+   zzzzzzzzzzzzzz
     </div>
     <div class='logo'>
       <div class='background'/>
@@ -10,17 +10,11 @@
       <h2>Welcome to Kola Wallet</h2>
       <p>Your Digital Passport</p>
       <custom-button
-        to='/create-account'
         block
         primary
+        @click='loadApplication'
       >
-        Get Wallet
-      </custom-button>
-      <custom-button
-        to='/import-wallet'
-        block
-      >
-        Import Wallet
+        반갑습니다
       </custom-button>
     </div>
   </div>
@@ -91,17 +85,17 @@ import CustomButton from '../components/common/CustomButton.vue'
 import {mapActions} from 'vuex'
 
 export default {
-  name: 'Main',
+  name: 'WalletMain',
   components: {
     CustomButton,
   },
   async mounted() {
-    // if (this.isLogged) {
-    //   await this.$router.push('/wallet/main')
-    // }
+    await this.connectWallet()
   },
   computed: {
-    ...mapActions(['isLogged']),
   },
+  methods: {
+    ...mapActions(['isLogged', 'loadApplication', 'connectWallet']),
+  }
 }
 </script>

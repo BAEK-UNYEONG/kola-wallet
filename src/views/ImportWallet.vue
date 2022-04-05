@@ -23,7 +23,7 @@
   width: 360px;
   height: 600px;
   background-color: #6E777C;
-  background-image: url(/kola.png);
+  background-image: url('/public/kola.png');
   background-size: cover;
   background-position: center;
 
