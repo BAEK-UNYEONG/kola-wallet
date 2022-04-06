@@ -1,9 +1,16 @@
+import config from '@/config'
 import Web3 from '@/utils/web3'
 import {roundOffDecimals} from '@/utils/math'
 import KolaWalletAPI from '@/api/KolaWalletAPI'
 import {createStore} from 'vuex'
 
-import config from '@/config'
+const EXCHANGE_DATA = {
+  USD: 0,
+  ERU: 0,
+  JPY: 0,
+  CNY: 0,
+  WON: 0,
+}
 
 export default createStore({
   state: {
@@ -12,19 +19,18 @@ export default createStore({
     seedPhrase: null,
     privateKey: null,
     balance: 0,
-    exchangeData: {
-      USD: 0,
-      ERU: 0,
-      JPY: 0,
-      CNY: 0,
-      WON: 0,
-    },
+    exchangeData: EXCHANGE_DATA,
     selectedHost: 'ropsten',
     selectedExchange: 'USD',
   },
   getters: {
     web3: state => state.web3,
     address: state => state.address,
+    abbrAddress: state => {
+      const first = state.address?.slice(0, 6)
+      const last = state.address?.slice(-4)
+      return `${first}...${last}`
+    },
     seedPhrase: state => state.seedPhrase,
     privateKey: state => state.privateKey,
     balance: state => roundOffDecimals(state.balance, 4),
@@ -47,7 +53,7 @@ export default createStore({
     SET_SEED_PHRASE: (state, seedPhrase = null) => state.seedPhrase = seedPhrase,
     SET_PRIVATE_KEY: (state, privateKey = null) => state.privateKey = privateKey,
     SET_BALANCE: (state, balance = 0) => state.balance = balance,
-    SET_EXCHANGE_DATA: (state, exchangeData = {}) => state.exchangeData = exchangeData,
+    SET_EXCHANGE_DATA: (state, exchangeData = EXCHANGE_DATA) => state.exchangeData = exchangeData,
   },
   actions: {
     async loadApplication({dispatch}) {

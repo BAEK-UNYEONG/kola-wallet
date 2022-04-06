@@ -5,6 +5,7 @@ import store from '@/store'
 import axios from '@/plugins/axios'
 import VueClipboard from 'vue-clipboard2'
 
+import 'boxicons/css/boxicons.min.css'
 import '@/assets/scss/style.scss'
 
 createApp(App)

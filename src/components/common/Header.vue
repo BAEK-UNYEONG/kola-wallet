@@ -1,32 +1,23 @@
 <template>
   <div class='common-header'>
-    <div class='container'>
-      <router-link to='/'>
-        <!--        <font-awesome-icon :icon="['fas', 'house']"/>-->
-        Kola Market
-      </router-link>
+    <div class='left-side'>
+      <div class='profile' v-html='gravatar'/>
+    </div>
+    <div
+      class='content'
+      @click='onClickCopyClipboard'
+    >
+      <div class='account-name'>
+        Main Account
+      </div>
+      <div class='account-address'>
+        {{ abbrAddress }}
+        <i class='bx bx-copy'/>
+      </div>
     </div>
     <div class='right-side'>
-      <div
-        class='item'
-        @click='onClickConnectWallet'
-      >
-        <!--        <font-awesome-icon :icon="['fas', 'wallet']"/>-->
-        지갑 연결
-      </div>
-      <div class='label'>
-        <!--        <font-awesome-icon :icon="['fas', 'coins']"/>-->
-        Current Balance
-        <span>
-          {{ currentBalance }}
-        </span>
-        ETH
-      </div>
-      <div
-        class='item'
-        @click='onClickOpenWalletPopup'
-      >
-        {{ accountAddress }}
+      <div class='more'>
+        <i class='bx bx-dots-vertical-rounded'/>
       </div>
     </div>
   </div>
@@ -36,93 +27,82 @@
 .common-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
-  height: 60px;
+  min-height: 80px;
   background: rgba(0, 0, 0, .8);
 
-  > .container,
+  > .left-side {
+    margin-left: 20px;
+
+    > .profile {
+      width: 50px;
+      height: 50px;
+      border-radius: 500rem;
+      background: #6E777C;
+      overflow: hidden;
+      cursor: pointer;
+    }
+  }
+
+  > .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &:hover {
+      opacity: .8;
+    }
+
+    > .account-name {
+      color: #CC4E8E;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    > .account-address {
+      margin-top: 2px;
+      color: #fff;
+      font-size: 13px;
+    }
+  }
+
   > .right-side {
-    > a, > .item, > .label {
+    margin-right: 20px;
+
+    > .more {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: fit-content;
-      padding: 8px 12px;
-      border-radius: 8px;
-      background: #363636;
-      color: #fff;
-      font-size: 13px;
-      text-decoration: none;
+      width: 50px;
+      height: 50px;
+      color: #6E777C;
+      font-size: 28px;
       cursor: pointer;
-
-      > i {
-        margin-right: 5px;
-      }
-
-      > .alert {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: fit-content;
-        margin-left: 6px;
-        padding: 0 6px 2px 5px;
-        border-radius: 500rem;
-        background: red;
-        color: #fff;
-        font-size: 11px;
-        font-weight: bold;
-      }
-    }
-
-    > .label {
-      background: transparent;
-      cursor: text;
-
-      > span {
-        margin: 0 5px;
-        color: #ffe804;
-      }
-    }
-  }
-
-  > .container {
-    display: flex;
-    flex: 1;
-    margin-left: 20px;
-
-    > a, > .item, > .label {
-      &:not(:last-child) {
-        margin-right: 10px;
-      }
-    }
-  }
-
-  > .right-side {
-    display: flex;
-    margin-right: 20px;
-
-    > a, > .item, > .label {
-      color: #fff;
-
-      &:not(:first-child) {
-        margin-left: 10px;
-      }
     }
   }
 }
 </style>
 
 <script>
-// import {mapGetters, mapActions} from "vuex"
+import {mapGetters, mapActions} from 'vuex'
+import {toSvg} from 'jdenticon'
 
 export default {
   name: 'Header',
   computed: {
-    // ...mapGetters(["web3", "account", "balance"]),
+    ...mapGetters(['address', 'abbrAddress', 'balance']),
+    gravatar() {
+      return toSvg(this.address, 50)
+    }
   },
   methods: {
-    // ...mapActions(["connectWallet", "disconnectWallet"]),
+    // ...mapActions(['connectWallet']),
+    onClickCopyClipboard() {
+      this.$copyText(this.address)
+    },
   }
 }
 </script>

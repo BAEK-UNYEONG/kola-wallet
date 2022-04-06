@@ -1,23 +1,18 @@
 <template>
   <div class='container'>
-    <div class='title'>
-      {{ balance }} ETH
-    </div>
-    <div class='logo'>
-      <div class='background'/>
-    </div>
+    <Header/>
     <div class='content'>
-      <h2>
-        ${{ exchangeBalance }}
-      </h2>
-      <p>Your Digital Passport</p>
-      <custom-button
-        block
-        primary
-      >
-        반갑습니다
-      </custom-button>
+      <div class='item main'>
+        <div class='backdrop'/>
+        <div class='balance'>
+          {{ balance }} ETH
+        </div>
+        <div class='exchange-balance'>
+          ${{ exchangeBalance }} {{ selectedExchange }}
+        </div>
+      </div>
     </div>
+    <Footer/>
   </div>
 </template>
 
@@ -31,57 +26,42 @@
   height: 600px;
   background: #6E777C;
 
-  > .title {
-    margin-top: 50px;
-    color: #fff;
-    font-size: 36px;
-    font-weight: bold;
-  }
-
-  > .logo {
-    width: 300px;
-    height: 300px;
-    position: relative;
-    background-image: url('/public/kola.png');
-    background-size: cover;
-    background-position: center;
-
-    > .background {
-      width: inherit;
-      height: inherit;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: linear-gradient(transparent, #6E777C);
-    }
-  }
-
   > .content {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    align-items: center;
-    width: 300px;
-    min-height: 240px;
-    margin-top: -50px;
-    z-index: 1;
+    width: calc(100% - 40px);
+    padding: 20px;
 
-    > h2 {
-      margin: 0;
-      color: #fff;
-    }
+    > .item {
+      display: flex;
+      height: 100px;
+      position: relative;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, .1);
+      box-shadow: 0 0 30px rgba(0, 0, 0, .1);
+      overflow: hidden;
+      cursor: pointer;
 
-    > p {
-      color: #fff;
-    }
-
-    > .custom-button {
-      margin: 5px 0;
+      > .backdrop {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-image: url(/public/kola.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        filter: blur(8px);
+        opacity: .25;
+      }
     }
   }
 }
 </style>
 
 <script>
+import Header from '@/components/common/Header'
+import Footer from '@/components/common/Footer'
 import CustomButton from '@/components/common/CustomButton'
 import {mapActions, mapGetters} from 'vuex'
 
@@ -90,6 +70,8 @@ const TIMEOUT_SECONDS = 10
 export default {
   name: 'WalletMain',
   components: {
+    Header,
+    Footer,
     CustomButton,
   },
   data: () => ({
@@ -104,7 +86,7 @@ export default {
     await this.autoUpdateCurrentBalance()
   },
   computed: {
-    ...mapGetters(['balance', 'exchangeBalance', 'isLogged']),
+    ...mapGetters(['balance', 'exchangeBalance', 'selectedExchange', 'isLogged']),
   },
   methods: {
     ...mapActions(['loadApplication', 'connectWallet', 'updateBalance']),
