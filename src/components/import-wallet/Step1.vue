@@ -126,7 +126,7 @@ export default {
     await this.$refs.secretRecoveryPhrase.focusIn()
   },
   methods: {
-    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC', 'SET_PRIVATE_KEY']),
+    ...mapMutations(['SET_ADDRESS', 'SET_SEED_PHRASE', 'SET_PRIVATE_KEY']),
     async onClickCreateWallet() {
       if (this.secretRecoveryPhrase === '') {
         alert('비밀 복구 구문을 입력하지 않았습니다.')
@@ -153,20 +153,16 @@ export default {
         await this.$refs.password.focusIn()
         return
       }
-      console.log(
-        this.secretRecoveryPhrase,
-        'this.secretRecoveryPhrase'
-      )
       const {
         address,
-        mnemonic,
+        seedPhrase,
         privateKey,
       } = await generateAccount({
         password: this.password,
-        seedPhrase: this.secretRecoveryPhrase,
+        randomSeed: this.secretRecoveryPhrase,
       })
       this.SET_ADDRESS(address)
-      this.SET_MNEMONIC(mnemonic)
+      this.SET_SEED_PHRASE(seedPhrase)
       this.SET_PRIVATE_KEY(privateKey)
       this.$emit('onClickGoTo', 2)
     },

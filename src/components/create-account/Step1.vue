@@ -93,7 +93,7 @@ export default {
     await this.$refs.password.focusIn()
   },
   methods: {
-    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC', 'SET_PRIVATE_KEY']),
+    ...mapMutations(['SET_ADDRESS', 'SET_SEED_PHRASE', 'SET_PRIVATE_KEY']),
     async onClickCreateWallet() {
       if (this.password === '') {
         alert('비밀번호를 입력하지 않았습니다.')
@@ -112,13 +112,13 @@ export default {
       }
       const {
         address,
-        mnemonic,
+        seedPhrase,
         privateKey,
       } = await generateAccount({
         password: this.password
       })
       this.SET_ADDRESS(address)
-      this.SET_MNEMONIC(mnemonic)
+      this.SET_SEED_PHRASE(seedPhrase)
       this.SET_PRIVATE_KEY(privateKey)
       this.$emit('onClickGoTo', 2)
     },

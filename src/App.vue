@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<style lang="scss">
+<style lang='scss'>
 body {
   margin: 0;
   padding: 0;
@@ -16,17 +16,17 @@ body {
 </style>
 
 <script>
-// import CommonHeader from "./components/common/Header.vue";
-import {mapActions} from "vuex";
+import CommonHeader from '@/components/common/Header'
+import {mapActions} from 'vuex'
 
 export default {
-  name: "App",
+  name: 'App',
   // components: {CommonHeader},
   async mounted() {
-    // await this.loadApplication()
+    await this.loadApplication()
   },
   methods: {
-    // ...mapActions(["loadApplication"]),
+    ...mapActions(['loadApplication']),
   }
 }
 </script>

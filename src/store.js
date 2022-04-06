@@ -5,60 +5,69 @@ import {createStore} from 'vuex'
 
 import config from '@/config'
 
-
 export default createStore({
   state: {
     web3: null,
-    address: null, // '0x2640dc4eac3e7ee1cd5d2542b17b182c7b1a1c58',
-    mnemonic: null,
-    privateKey: null, // '924575c91ea36bc4c6bdce37e4e054d07b21f24d0757cda62c394d450c7e1e90',
+    address: null,
+    seedPhrase: null,
+    privateKey: null,
     balance: 0,
-    exchangeBalance: 0,
-    selectedHost: 'ropsten'
-  },
-  actions: {
-    async loadApplication() {
-
+    exchangeData: {
+      USD: 0,
+      ERU: 0,
+      JPY: 0,
+      CNY: 0,
+      WON: 0,
     },
-    async connectWallet({dispatch, commit, getters}) {
-      const web3 = await Web3(getters.selectedHost, getters.privateKey)
-      commit('SET_WEB3', web3)
-      console.log(web3.eth.accounts.wallet)
-      const address = await web3.eth.accounts.wallet[0]?.address
-      commit('SET_ADDRESS', address)
-      await dispatch('updateBalance')
-      // const {host} = getters
-    },
-    async updateBalance({commit, getters}, unit = 'ether') {
-      const currentUSD = await KolaWalletAPI.changeToUSD()
-      const currentBalance = await getters.web3.eth.getBalance(getters.address)
-      const balance = getters.web3.utils.fromWei(currentBalance, unit)
-      const exchangeBalance = currentUSD * parseFloat(balance)
-      console.log(getters.address, "address")
-      console.log(getters.privateKey, "privateKey")
-      // console.log(balance, "balance")
-      // console.log(exchangeBalance, "exchangeBalance")
-      commit('SET_BALANCE', roundOffDecimals(balance, 4))
-      commit('SET_EXCHANGE_BALANCE', roundOffDecimals(exchangeBalance, 2))
-    },
-  },
-  mutations: {
-    SET_WEB3: (state, web3 = null) => state.web3 = web3,
-    SET_ADDRESS: (state, address = null) => state.address = address,
-    SET_MNEMONIC: (state, mnemonic = null) => state.mnemonic = mnemonic,
-    SET_PRIVATE_KEY: (state, privateKey = null) => state.privateKey = privateKey,
-    SET_BALANCE: (state, balance = 0) => state.balance = balance,
-    SET_EXCHANGE_BALANCE: (state, exchangeBalance = 0) => state.exchangeBalance = exchangeBalance,
+    selectedHost: 'ropsten',
+    selectedExchange: 'USD',
   },
   getters: {
     web3: state => state.web3,
     address: state => state.address,
-    mnemonic: state => state.mnemonic,
+    seedPhrase: state => state.seedPhrase,
     privateKey: state => state.privateKey,
-    balance: state => state.balance,
-    exchangeBalance: state => state.exchangeBalance,
+    balance: state => roundOffDecimals(state.balance, 4),
+    pureBalance: state => state.balance,
+    exchangeBalance: state => {
+      const currentExchange = state.exchangeData[state.selectedExchange]
+      const exchangeBalance = currentExchange * parseFloat(state.balance)
+      return roundOffDecimals(exchangeBalance, 2)
+    },
+    exchangeData: state => state.exchangeData,
     host: state => config.hosts[state.selectedHost],
+    hosts: () => config.hosts,
     selectedHost: state => state.selectedHost,
+    selectedExchange: state => state.selectedExchange,
     isLogged: state => !!state.address,
+  },
+  mutations: {
+    SET_WEB3: (state, web3 = null) => state.web3 = web3,
+    SET_ADDRESS: (state, address = null) => state.address = address,
+    SET_SEED_PHRASE: (state, seedPhrase = null) => state.seedPhrase = seedPhrase,
+    SET_PRIVATE_KEY: (state, privateKey = null) => state.privateKey = privateKey,
+    SET_BALANCE: (state, balance = 0) => state.balance = balance,
+    SET_EXCHANGE_DATA: (state, exchangeData = {}) => state.exchangeData = exchangeData,
+  },
+  actions: {
+    async loadApplication({dispatch}) {
+      await dispatch('updateExchangeData')
+    },
+    async connectWallet({dispatch, commit, getters}) {
+      const web3 = await Web3(getters.selectedHost, getters.privateKey)
+      commit('SET_WEB3', web3)
+      const address = await web3.eth.accounts.wallet[0]?.address
+      commit('SET_ADDRESS', address)
+      await dispatch('updateBalance')
+    },
+    async updateBalance({commit, getters}, unit = 'ether') {
+      const currentBalance = await getters.web3.eth.getBalance(getters.address)
+      const balance = getters.web3.utils.fromWei(currentBalance, unit)
+      commit('SET_BALANCE', balance)
+    },
+    async updateExchangeData({commit, getters}, from = 'ETH') {
+      const data = await KolaWalletAPI.exchange({from, to: getters.selectedExchange})
+      commit('SET_EXCHANGE_DATA', data)
+    }
   },
 })

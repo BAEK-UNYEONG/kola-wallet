@@ -147,13 +147,13 @@ export default {
     this.clearTimer()
   },
   computed: {
-    ...mapGetters(['mnemonic']),
+    ...mapGetters(['seedPhrase']),
     seeds() {
-      return this.mnemonic.split(' ')
+      return this.seedPhrase.split(' ')
     },
   },
   methods: {
-    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC']),
+    ...mapMutations(['SET_ADDRESS', 'SET_SEED_PHRASE']),
     autoBlurSeedBox() {
       this.timer = setTimeout(() => {
         this.isBlurredSeedBox = true
@@ -173,13 +173,13 @@ export default {
       this.isConfirmedSeedPhrase = true
     },
     onClickCopyClipboard() {
-      this.$copyText(this.mnemonic)
+      this.$copyText(this.seedPhrase)
     },
     onClickGoBack() {
       this.$emit('onClickGoBack')
     },
     onClickConfirmSeedPhrase() {
-      this.SET_MNEMONIC()
+      this.SET_SEED_PHRASE()
       this.$emit('onClickGoTo', 3)
     },
   },

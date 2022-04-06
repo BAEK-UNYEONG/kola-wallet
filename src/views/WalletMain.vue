@@ -85,7 +85,7 @@
 import CustomButton from '@/components/common/CustomButton'
 import {mapActions, mapGetters} from 'vuex'
 
-const TIMEOUT_SECONDS = 5
+const TIMEOUT_SECONDS = 10
 
 export default {
   name: 'WalletMain',

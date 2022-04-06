@@ -1,5 +1,5 @@
 import {generate} from '@/api/v1/account'
-import {changeToUSD} from '@/api/v1/cryptocompare'
+import {exchange} from '@/api/v1/cryptocompare'
 
 class KolaWalletAPI {
   $api
@@ -9,12 +9,8 @@ class KolaWalletAPI {
     return data
   }
 
-  async changeToUSD() {
-    const {
-      data: {
-        USD: data,
-      },
-    } = await changeToUSD.apply(this)
+  async exchange(args) {
+    const {data} = await exchange.apply(this, [args])
     return data
   }
 }
