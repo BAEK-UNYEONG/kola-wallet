@@ -87,8 +87,8 @@
 </style>
 
 <script>
-import CustomButton from '../components/common/CustomButton.vue'
-import {mapActions} from 'vuex'
+import CustomButton from '@/components/common/CustomButton'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'Main',
@@ -96,12 +96,14 @@ export default {
     CustomButton,
   },
   async mounted() {
-    // if (this.isLogged) {
-    //   await this.$router.push('/wallet/main')
-    // }
+    if (this.isLogged) {
+      await this.$router.push('/wallet-main')
+      return
+    }
+    console.log('started')
   },
   computed: {
-    ...mapActions(['isLogged']),
+    ...mapGetters(['isLogged']),
   },
 }
 </script>

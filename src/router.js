@@ -1,9 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
-
-import Main from './views/Main.vue'
-import CreateAccount from './views/CreateAccount.vue'
-import ImportWallet from './views/ImportWallet.vue'
-import WalletMain from './views/WalletMain.vue'
+import Main from '@/views/Main'
+import CreateAccount from '@/views/CreateAccount'
+import ImportWallet from '@/views/ImportWallet'
+import WalletMain from '@/views/WalletMain'
 
 const routes = [
   {

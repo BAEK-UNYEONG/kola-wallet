@@ -1,13 +1,15 @@
 import Web3 from 'web3'
 
-const {ethereum} = window
+const {VUE_APP_INFURA_PROJECT_ID} = process.env
 
-export default async () => {
-  if (typeof ethereum === 'undefined') {
-    return false;
-  }
-  await ethereum.enable()
-  return new Web3(ethereum, null, {
-    transactionConfirmationBlocks: 1,
-  })
+export default async (network, privateKey) => {
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider(
+      'https://ropsten.infura.io/v3/198cfc1e12294cc4ba3ab6cf17bfc30d'
+      // `https://${network}.infura.io/v3/${VUE_APP_INFURA_PROJECT_ID}`
+    )
+  )
+  const signer = web3.eth.accounts.privateKeyToAccount(privateKey)
+  web3.eth.accounts.wallet.add(signer)
+  return web3
 }

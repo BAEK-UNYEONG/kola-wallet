@@ -1,18 +1,19 @@
 <template>
   <div class='container'>
     <div class='title'>
-   zzzzzzzzzzzzzz
+      {{ balance }} ETH
     </div>
     <div class='logo'>
       <div class='background'/>
     </div>
     <div class='content'>
-      <h2>Welcome to Kola Wallet</h2>
+      <h2>
+        ${{ exchangeBalance }}
+      </h2>
       <p>Your Digital Passport</p>
       <custom-button
         block
         primary
-        @click='loadApplication'
       >
         반갑습니다
       </custom-button>
@@ -81,21 +82,44 @@
 </style>
 
 <script>
-import CustomButton from '../components/common/CustomButton.vue'
-import {mapActions} from 'vuex'
+import CustomButton from '@/components/common/CustomButton'
+import {mapActions, mapGetters} from 'vuex'
+
+const TIMEOUT_SECONDS = 5
 
 export default {
   name: 'WalletMain',
   components: {
     CustomButton,
   },
+  data: () => ({
+    timer: null,
+  }),
   async mounted() {
+    if (!this.isLogged) {
+      await this.$router.push('/')
+      return
+    }
     await this.connectWallet()
+    await this.autoUpdateCurrentBalance()
   },
   computed: {
+    ...mapGetters(['balance', 'exchangeBalance', 'isLogged']),
   },
   methods: {
-    ...mapActions(['isLogged', 'loadApplication', 'connectWallet']),
+    ...mapActions(['loadApplication', 'connectWallet', 'updateBalance']),
+    async autoUpdateCurrentBalance() {
+      setTimeout(async () => {
+        await this.updateBalance()
+        await this.autoUpdateCurrentBalance()
+      }, TIMEOUT_SECONDS * 1000)
+    },
+    clearTimer() {
+      if (this.timer) {
+        clearTimeout(this.timer)
+        this.timer = null
+      }
+    },
   }
 }
 </script>

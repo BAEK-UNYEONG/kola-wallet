@@ -1,9 +1,13 @@
-import Wallet from 'yoethwallet'
+import LightWallet from 'eth-lightwallet'
 
 const HD_PATH_STRING = 'm/44\'/60\'/0\'/0'
 
-const generate = async (mnemonic = '') => await new Promise((resolve, reject) => {
-  Wallet.wallet.generate(mnemonic, HD_PATH_STRING, (err, keystore) => {
+const generate = async (password, seedPhrase) => await new Promise((resolve, reject) => {
+  LightWallet.keystore.createVault({
+    password,
+    seedPhrase,
+    hdPathString: HD_PATH_STRING,
+  }, (err, keystore) => {
     if (err) {
       reject(err)
     }
@@ -12,37 +16,43 @@ const generate = async (mnemonic = '') => await new Promise((resolve, reject) =>
 })
 
 const newAddress = async (keystore, password = '') => await new Promise((resolve, reject) => {
-  const privateKey = keystore.getHexPrivateKey()
-  const address = keystore.getHexAddress(true)
-  let keystoreJsonDataLink, fileName
-  keystore.toV3String(password, {}, (err, v3Json) => {
+  keystore.keyFromPassword(password, (err, pwDerivedKey) => {
     if (err) {
       reject(err)
-      return
     }
-    keystoreJsonDataLink = encodeURI('data:application/json;charset=utf-8,' + v3Json)
-    fileName = `${keystore.getV3Filename()}.json`
+    keystore.generateNewAddress(pwDerivedKey, 1)
+    const address = keystore.getAddresses()[0]
+    const privateKey = keystore.exportPrivateKey(address, pwDerivedKey)
+    const keystoreJsonDataLink = encodeURI(`data:application/json;charset=utf-8,${keystore.serialize()}`)
     resolve({
       address,
       privateKey,
       keystoreJsonDataLink,
-      fileName,
     })
   })
 })
 
-export async function generateAccount({mnemonic, password}) {
-  let address, pureMnemonic, privateKey, keystore, keystoreJsonDataLink, fileName
-  keystore = await generate(mnemonic)
-  pureMnemonic = keystore.mnemonic
-  const result = await newAddress(keystore, password)
-  address = result.address
-  privateKey = result.privateKey
-  keystoreJsonDataLink = result.keystoreJsonDataLink
-  fileName = result.fileName
+export function isSeedValid(randomSeed) {
+  if (!randomSeed) {
+    return false
+  }
+  if (randomSeed.split(' ').length !== 12) {
+    return false
+  }
+  return LightWallet.keystore.isSeedValid(randomSeed)
+}
+
+export async function generateAccount({password, seedPhrase = ''}) {
+  const keystore = await generate(password, seedPhrase)
+  const {
+    address,
+    privateKey,
+    keystoreJsonDataLink,
+    fileName,
+  } = await newAddress(keystore, password)
   return {
     address,
-    mnemonic: pureMnemonic,
+    seedPhrase,
     privateKey,
     keystoreJsonDataLink,
     fileName,

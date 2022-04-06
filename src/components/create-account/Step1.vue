@@ -71,12 +71,11 @@
 </style>
 
 <script>
-import CustomInput from '../common/CustomInput.vue'
-import CustomButtonGroup from '../common/CustomButtonGroup.vue'
-import CustomButton from '../common/CustomButton.vue'
-import {generateAccount} from '../../utils/wallet'
+import CustomInput from '@/components/common/CustomInput'
+import CustomButtonGroup from '@/components/common/CustomButtonGroup'
+import CustomButton from '@/components/common/CustomButton'
+import {generateAccount} from '@/utils/wallet'
 import {mapMutations} from 'vuex'
-import Wallet from 'yoethwallet'
 
 export default {
   name: 'CreateAccountStep1',
@@ -94,7 +93,7 @@ export default {
     await this.$refs.password.focusIn()
   },
   methods: {
-    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC']),
+    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC', 'SET_PRIVATE_KEY']),
     async onClickCreateWallet() {
       if (this.password === '') {
         alert('비밀번호를 입력하지 않았습니다.')
@@ -107,18 +106,20 @@ export default {
         return
       }
       if (this.password !== this.confirmPassword) {
-        alert('입력한 비밀번호가 서로 일치하지 않습니다.')
+        alert('입력한 비  밀번호가 서로 일치하지 않습니다.')
         await this.$refs.password.focusIn()
         return
       }
       const {
         address,
         mnemonic,
+        privateKey,
       } = await generateAccount({
         password: this.password
       })
       this.SET_ADDRESS(address)
       this.SET_MNEMONIC(mnemonic)
+      this.SET_PRIVATE_KEY(privateKey)
       this.$emit('onClickGoTo', 2)
     },
   },

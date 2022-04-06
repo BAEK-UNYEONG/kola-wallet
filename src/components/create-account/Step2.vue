@@ -119,10 +119,10 @@
 </style>
 
 <script>
-import CustomAlert from '../common/CustomAlert.vue'
-import CustomInput from '../common/CustomInput.vue'
-import CustomButtonGroup from '../common/CustomButtonGroup.vue'
-import CustomButton from '../common/CustomButton.vue'
+import CustomAlert from '@/components/common/CustomAlert'
+import CustomInput from '@/components/common/CustomInput'
+import CustomButtonGroup from '@/components/common/CustomButtonGroup'
+import CustomButton from '@/components/common/CustomButton'
 import {mapGetters, mapMutations} from 'vuex'
 
 const TIMEOUT_SECONDS = 15

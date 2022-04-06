@@ -100,11 +100,11 @@
 </style>
 
 <script>
-import CustomAlert from '../common/CustomAlert.vue'
-import CustomInput from '../common/CustomInput.vue'
-import CustomButtonGroup from '../common/CustomButtonGroup.vue'
-import CustomButton from '../common/CustomButton.vue'
-import KolaWalletAPI from '../../api/KolaWalletAPI'
+import CustomAlert from '@/components/common/CustomAlert'
+import CustomInput from '@/components/common/CustomInput'
+import CustomButtonGroup from '@/components/common/CustomButtonGroup'
+import CustomButton from '@/components/common/CustomButton'
+import {generateAccount, isSeedValid} from '@/utils/wallet'
 import {mapMutations} from 'vuex'
 
 export default {
@@ -126,14 +126,14 @@ export default {
     await this.$refs.secretRecoveryPhrase.focusIn()
   },
   methods: {
-    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC']),
+    ...mapMutations(['SET_ADDRESS', 'SET_MNEMONIC', 'SET_PRIVATE_KEY']),
     async onClickCreateWallet() {
       if (this.secretRecoveryPhrase === '') {
         alert('비밀 복구 구문을 입력하지 않았습니다.')
         await this.$refs.secretRecoveryPhrase.focusIn()
         return
       }
-      if (this.secretRecoveryPhrase.trim().split(' ').length < 12) {
+      if (!isSeedValid(this.secretRecoveryPhrase.trim())) {
         alert('정상적인 비밀 복구 구문이 아닙니다.')
         await this.$refs.secretRecoveryPhrase.focusIn()
         return
@@ -153,15 +153,21 @@ export default {
         await this.$refs.password.focusIn()
         return
       }
+      console.log(
+        this.secretRecoveryPhrase,
+        'this.secretRecoveryPhrase'
+      )
       const {
         address,
         mnemonic,
-      } = await KolaWalletAPI.generate({
+        privateKey,
+      } = await generateAccount({
         password: this.password,
-        mnemonic: this.secretRecoveryPhrase,
+        seedPhrase: this.secretRecoveryPhrase,
       })
       this.SET_ADDRESS(address)
       this.SET_MNEMONIC(mnemonic)
+      this.SET_PRIVATE_KEY(privateKey)
       this.$emit('onClickGoTo', 2)
     },
   },

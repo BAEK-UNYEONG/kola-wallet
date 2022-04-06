@@ -1,5 +1,5 @@
 import axios from 'axios'
-import KolaWalletAPI from '../api/KolaWalletAPI'
+import KolaWalletAPI from '@/api/KolaWalletAPI'
 
 export default function () {
   const api = axios.create({

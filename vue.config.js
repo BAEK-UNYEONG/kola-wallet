@@ -6,7 +6,7 @@ module.exports = defineConfig({
   lintOnSave: false,
   configureWebpack: {
     plugins: [
-      new NodePolyfillPlugin()
+      new NodePolyfillPlugin(),
     ]
   }
 })

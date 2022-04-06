@@ -4,7 +4,7 @@
       <p>지갑을 복구했습니다!</p>
     </custom-alert>
     <custom-button-group>
-      <custom-button to='/wallet/main' primary>
+      <custom-button to='/wallet-main' primary>
         Confirm
       </custom-button>
     </custom-button-group>
@@ -20,9 +20,9 @@
 </style>
 
 <script>
-import CustomAlert from '../common/CustomAlert.vue'
-import CustomButtonGroup from '../common/CustomButtonGroup.vue'
-import CustomButton from '../common/CustomButton.vue'
+import CustomAlert from '@/components/common/CustomAlert'
+import CustomButtonGroup from '@/components/common/CustomButtonGroup'
+import CustomButton from '@/components/common/CustomButton'
 
 export default {
   name: 'ImportWalletStep2',

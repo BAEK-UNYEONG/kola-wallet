@@ -79,11 +79,11 @@
 </style>
 
 <script>
-import CustomInput from '../components/common/CustomInput.vue'
-import CustomButtonGroup from '../components/common/CustomButtonGroup.vue'
-import CustomButton from '../components/common/CustomButton.vue'
-import ImportWalletStep1 from '../components/import-wallet/Step1.vue'
-import ImportWalletStep2 from '../components/import-wallet/Step2.vue'
+import CustomInput from '@/components/common/CustomInput'
+import CustomButtonGroup from '@/components/common/CustomButtonGroup'
+import CustomButton from '@/components/common/CustomButton'
+import ImportWalletStep1 from '@/components/import-wallet/Step1'
+import ImportWalletStep2 from '@/components/import-wallet/Step2'
 
 const createAccountComponents = [
   ImportWalletStep1,

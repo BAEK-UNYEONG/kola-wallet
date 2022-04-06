@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
+    "eth-lightwallet": "^4.0.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "node-sass": "^7.0.1",
     "qs": "^6.10.3",
@@ -17,8 +18,7 @@
     "vue-clipboard2": "^0.3.3",
     "vue-router": "^4.0.14",
     "vuex": "^4.0.2",
-    "web3": "^1.7.1",
-    "yoethwallet": "^0.1.4"
+    "web3": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

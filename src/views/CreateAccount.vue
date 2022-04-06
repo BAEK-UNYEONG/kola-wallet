@@ -79,12 +79,12 @@
 </style>
 
 <script>
-import CustomInput from '../components/common/CustomInput.vue'
-import CustomButtonGroup from '../components/common/CustomButtonGroup.vue'
-import CustomButton from '../components/common/CustomButton.vue'
-import CreateAccountStep1 from '../components/create-account/Step1.vue'
-import CreateAccountStep2 from '../components/create-account/Step2.vue'
-import CreateAccountStep3 from '../components/create-account/Step3.vue'
+import CustomInput from '@/components/common/CustomInput'
+import CustomButtonGroup from '@/components/common/CustomButtonGroup'
+import CustomButton from '@/components/common/CustomButton'
+import CreateAccountStep1 from '@/components/create-account/Step1'
+import CreateAccountStep2 from '@/components/create-account/Step2'
+import CreateAccountStep3 from '@/components/create-account/Step3'
 
 const createAccountComponents = [
   CreateAccountStep1,
