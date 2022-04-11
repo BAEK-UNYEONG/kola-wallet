@@ -1,15 +1,15 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import Main from '@/views/Main'
+import Index from '@/views/Index'
 import CreateAccount from '@/views/CreateAccount'
 import ImportWallet from '@/views/ImportWallet'
-import WalletMain from '@/views/WalletMain'
+import WalletIndex from '@/views/wallet/Index'
 
 const routes = [
   {
     path: '/',
     alias: ['/', '/app', '/index.html'],
-    name: 'Main',
-    component: Main
+    name: 'Index',
+    component: Index
   },
   {
     path: '/create-account',
@@ -22,9 +22,16 @@ const routes = [
     component: ImportWallet
   },
   {
-    path: '/wallet-main',
-    name: 'WalletMain',
-    component: WalletMain
+    path: '/wallet',
+    name: 'WalletIndex',
+    component: WalletIndex,
+    children: [
+      {
+        path: 'index',
+        name: 'WalletIndex',
+        component: WalletIndex,
+      },
+    ]
   },
 ]
 

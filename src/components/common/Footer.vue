@@ -1,19 +1,11 @@
 <template>
   <div class='common-footer'>
-    <div class='item active'>
-      <i class='bx bx-wallet'/>
-    </div>
-    <div class='item'>
-      <i class='bx bx-history'/>
-    </div>
-    <div class='item'>
-      <i class='bx bx-grid-alt'/>
-    </div>
-    <div class='item'>
-      <i class='bx bx-transfer'/>
-    </div>
-    <div class='item'>
-      <i class='bx bx-cog'/>
+    <div
+      v-for='(item, i) in iconList' :key='i'
+      :class='["item", i === index - 1 && "active"]'
+      @click='onClickIndex(i)'
+    >
+      <i :class='["bx", item]'/>
     </div>
   </div>
 </template>
@@ -25,7 +17,9 @@
   justify-content: space-around;
   width: 100%;
   min-height: 60px;
+  border-top: 1px solid #CC4E8E;
   background: rgba(0, 0, 0, .8);
+  z-index: 1;
 
   > a, > .item {
     display: flex;
@@ -58,6 +52,39 @@
 <script>
 export default {
   name: 'Footer',
-  methods: {}
+  props: {
+    index: {
+      type: Number,
+      default: 1,
+    },
+  },
+  data: () => ({
+    currentIndex: 1,
+  }),
+  watch: {
+    index(index) {
+      this.currentIndex = index
+    }
+  },
+  async mounted() {
+    this.currentIndex = this.index
+  },
+  computed: {
+    iconList() {
+      return [
+        'bx-wallet',
+        'bx-history',
+        'bx-grid-alt',
+        'bx-transfer',
+        'bx-cog',
+      ]
+    },
+  },
+  methods: {
+    onClickIndex(index) {
+      this.currentIndex = index + 1
+      this.$emit('onClickIndex', this.currentIndex)
+    },
+  },
 }
 </script>

@@ -1,5 +1,6 @@
 import config from '@/config'
 import Web3 from '@/utils/web3'
+import {abbrAddress} from '@/utils/common'
 import {roundOffDecimals} from '@/utils/math'
 import KolaWalletAPI from '@/api/KolaWalletAPI'
 import {createStore} from 'vuex'
@@ -20,17 +21,14 @@ export default createStore({
     privateKey: null,
     balance: 0,
     exchangeData: EXCHANGE_DATA,
+    txList: [],
     selectedHost: 'ropsten',
     selectedExchange: 'USD',
   },
   getters: {
     web3: state => state.web3,
     address: state => state.address,
-    abbrAddress: state => {
-      const first = state.address?.slice(0, 6)
-      const last = state.address?.slice(-4)
-      return `${first}...${last}`
-    },
+    abbrAddress: state => abbrAddress(state.address),
     seedPhrase: state => state.seedPhrase,
     privateKey: state => state.privateKey,
     balance: state => roundOffDecimals(state.balance, 4),
@@ -41,6 +39,7 @@ export default createStore({
       return roundOffDecimals(exchangeBalance, 2)
     },
     exchangeData: state => state.exchangeData,
+    txList: state => state.txList,
     host: state => config.hosts[state.selectedHost],
     hosts: () => config.hosts,
     selectedHost: state => state.selectedHost,
@@ -54,6 +53,7 @@ export default createStore({
     SET_PRIVATE_KEY: (state, privateKey = null) => state.privateKey = privateKey,
     SET_BALANCE: (state, balance = 0) => state.balance = balance,
     SET_EXCHANGE_DATA: (state, exchangeData = EXCHANGE_DATA) => state.exchangeData = exchangeData,
+    SET_TX_LIST: (state, txList = []) => state.txList = txList,
   },
   actions: {
     async loadApplication({dispatch}) {
@@ -65,6 +65,7 @@ export default createStore({
       const address = await web3.eth.accounts.wallet[0]?.address
       commit('SET_ADDRESS', address)
       await dispatch('updateBalance')
+      await dispatch('updateTxList')
     },
     async updateBalance({commit, getters}, unit = 'ether') {
       const currentBalance = await getters.web3.eth.getBalance(getters.address)
@@ -74,6 +75,13 @@ export default createStore({
     async updateExchangeData({commit, getters}, from = 'ETH') {
       const data = await KolaWalletAPI.exchange({from, to: getters.selectedExchange})
       commit('SET_EXCHANGE_DATA', data)
-    }
+    },
+    async updateTxList({commit, getters}) {
+      const data = await KolaWalletAPI.getTransaction({
+        address: getters.address,
+        selectedHost: getters.selectedHost,
+      })
+      if (Array.isArray(data)) commit('SET_TX_LIST', data)
+    },
   },
 })

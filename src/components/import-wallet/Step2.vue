@@ -4,7 +4,7 @@
       <p>지갑을 복구했습니다!</p>
     </custom-alert>
     <custom-button-group>
-      <custom-button to='/wallet-main' primary>
+      <custom-button to='/wallet' primary>
         Confirm
       </custom-button>
     </custom-button-group>

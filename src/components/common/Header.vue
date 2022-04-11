@@ -30,7 +30,10 @@
   justify-content: space-between;
   width: 100%;
   min-height: 80px;
+  border-bottom: 1px solid #CC4E8E;
   background: rgba(0, 0, 0, .8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, .4);
+  z-index: 1;
 
   > .left-side {
     margin-left: 20px;

@@ -91,13 +91,13 @@ import CustomButton from '@/components/common/CustomButton'
 import {mapGetters} from 'vuex'
 
 export default {
-  name: 'Main',
+  name: 'Index',
   components: {
     CustomButton,
   },
   async mounted() {
     if (this.isLogged) {
-      await this.$router.push('/wallet-main')
+      await this.$router.push('/wallet')
       return
     }
     console.log('started')
