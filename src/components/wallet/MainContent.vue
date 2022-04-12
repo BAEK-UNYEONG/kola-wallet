@@ -7,12 +7,14 @@ import BalanceList from '@/components/wallet/BalanceList'
 import TransactionList from '@/components/wallet/TransactionList'
 import SendContact from '@/components/wallet/send/SendContact'
 import SendTransaction from '@/components/wallet/send/SendTransaction'
+import SendTransactionDetail from '@/components/wallet/send/SendTransactionDetail'
 
 const components = [
   BalanceList,
   TransactionList,
   SendContact,
   SendTransaction,
+  SendTransactionDetail,
 ]
 
 export default {

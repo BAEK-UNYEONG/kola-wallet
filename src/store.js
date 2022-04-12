@@ -13,6 +13,13 @@ const EXCHANGE_DATA = {
   WON: 0,
 }
 
+const SEND_TX_DATA = {
+  from: '',
+  to: '',
+  value: '0',
+  gasRate: 5,
+}
+
 export default createStore({
   state: {
     web3: null,
@@ -22,6 +29,7 @@ export default createStore({
     balance: 0,
     exchangeData: EXCHANGE_DATA,
     txList: [],
+    sendTxData: SEND_TX_DATA,
     selectedHost: 'ropsten',
     selectedExchange: 'USD',
   },
@@ -40,6 +48,7 @@ export default createStore({
     },
     exchangeData: state => state.exchangeData,
     txList: state => state.txList,
+    sendTxData: state => state.sendTxData,
     host: state => config.hosts[state.selectedHost],
     hosts: () => config.hosts,
     selectedHost: state => state.selectedHost,
@@ -54,6 +63,7 @@ export default createStore({
     SET_BALANCE: (state, balance = 0) => state.balance = balance,
     SET_EXCHANGE_DATA: (state, exchangeData = EXCHANGE_DATA) => state.exchangeData = exchangeData,
     SET_TX_LIST: (state, txList = []) => state.txList = txList,
+    SET_SEND_TX_DATA: (state, sendTxData = SEND_TX_DATA) => state.sendTxData = sendTxData,
   },
   actions: {
     async loadApplication({dispatch}) {
@@ -82,6 +92,32 @@ export default createStore({
         selectedHost: getters.selectedHost,
       })
       if (Array.isArray(data)) commit('SET_TX_LIST', data)
+    },
+    async updateSendTxData({commit, getters}, data) {
+      commit('SET_SEND_TX_DATA', {
+        ...getters.sendTxData,
+        ...data,
+      })
+    },
+    async valueTransaction({dispatch, commit, getters}) {
+      const signer = getters.web3.eth.accounts.privateKeyToAccount(getters.privateKey)
+      getters.web3.eth.accounts.wallet.add(signer)
+      const tx = {
+        from: signer.address,
+        to: getters.sendTxData.to,
+        value: getters.web3.utils.toWei(getters.sendTxData.value),
+      }
+      const estimateGas = await getters.web3.eth.estimateGas(tx)
+      tx.gas = `0x${Number(getters.web3.utils.toWei(String(estimateGas * (getters.sendTxData.gasRate || 1)), 'wei')).toString(16)}`
+      const receipt = await getters.web3.eth
+        .sendTransaction(tx)
+        .once('transactionHash', txhash => {
+          console.log(`Mining transaction ...`)
+          console.log(`https://${getters.selectedHost}.etherscan.io/tx/${txhash}`)
+        })
+
+      console.log(`Mined in block ${receipt.blockNumber}`)
+      return receipt
     },
   },
 })

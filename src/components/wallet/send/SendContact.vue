@@ -31,12 +31,16 @@
       </div>
     </div>
     <div class='divider'/>
-    <div class='tx-list'>
+    <div class='contact-list'>
       <div
-        v-for='(item, index) in contactList' :key='index'
+        v-for='(item, index) in filteredContactList' :key='index'
         class='item'
+        @click='onClickSendTransaction(item)'
       >
-
+        <div class='profile' v-html='gravatar(item)'/>
+        <div class='address'>
+          {{ abbrAddress(item) }}
+        </div>
       </div>
     </div>
   </div>
@@ -92,7 +96,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 340px;
     height: 36px;
     margin: 5px 0 20px 0;
     border: 1px solid #fff;
@@ -139,62 +143,6 @@
     }
   }
 
-  > .item {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 80px;
-    position: relative;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, .5);
-    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
-    overflow: hidden;
-
-    &:not(:last-child) {
-      margin-bottom: 20px;
-    }
-
-    &.main > .backdrop {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      background-image: url(/public/ethereum.png);
-      background-repeat: no-repeat;
-      background-position: right center;
-      background-size: 35%;
-    }
-
-    > .icon {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      margin: 0 20px;
-      border: 1px solid #fff;
-      border-radius: 500rem;
-      background-color: rgba(255, 255, 255, .6);
-      background-image: url(/public/ethereum.png);
-      background-size: 60%;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    > .info {
-      > .balance {
-        color: #333;
-        font-size: 26px;
-        font-weight: bold;
-      }
-
-      > .exchange-balance {
-        margin-bottom: 5px;
-        color: #CC4E8E;
-        font-size: 14px;
-      }
-    }
-  }
-
   > .divider {
     width: 100%;
     height: 1px;
@@ -202,35 +150,11 @@
     background: #ffffff33;
   }
 
-  > .send {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 36px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    background: #CC4E8E;
-    color: #fff;
-    font-size: 16px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, .25);
-    cursor: pointer;
-
-    > i {
-      margin-right: 5px;
-      font-size: 24px;
-    }
-
-    > span {
-      margin-bottom: 4px;
-    }
-  }
-
-  > .tx-list {
+  > .contact-list {
     width: 340px;
-    height: 240px;
+    height: 310px;
     position: absolute;
-    top: 299px;
+    top: 229px;
     overflow-y: scroll;
 
     &::-webkit-scrollbar {
@@ -241,10 +165,10 @@
       display: flex;
       align-items: center;
       width: 100%;
-      height: 80px;
-      margin-bottom: 10px;
+      height: 50px;
+      margin-bottom: 5px;
       position: relative;
-      border-radius: 5px;
+      border-radius: 3px;
       background-color: rgba(255, 255, 255, .5);
       box-shadow: 0 0 20px rgba(0, 0, 0, .1);
       overflow: hidden;
@@ -258,51 +182,22 @@
         margin-bottom: 20px;
       }
 
-      > .icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        margin: 0 5px 0 10px;
-        color: #CC4E8E;
-        font-size: 36px;
+      > .profile {
+        width: 30px;
+        height: 30px;
+        margin-left: 10px;
+        border-radius: 500rem;
+        background: #6E777C;
+        overflow: hidden;
+        cursor: pointer;
       }
 
-      > .author-info,
-      > .balance-info {
-        > .label {
-          font-size: 16px;
-        }
-
-        > .datetime-address {
-          margin-top: 2px;
-          color: #6E777C;
-          font-size: 13px;
-
-          > span {
-            color: #CC4E8E;
-          }
-        }
-
-        > .balance {
-          color: #333;
-          font-size: 16px;
-        }
-
-        > .exchange-balance {
-          color: #6E777C;
-          font-size: 14px;
-        }
-      }
-
-      > .balance-info {
+      > .address {
         display: flex;
         flex: 1;
         flex-direction: column;
-        align-items: flex-end;
-        margin-right: 10px;
+        margin: 0 10px 2px;
+        font-size: 13px;
       }
     }
   }
@@ -310,31 +205,62 @@
 </style>
 
 <script>
-import dayjs from 'dayjs'
+import {toSvg} from 'jdenticon'
 import {abbrAddress} from '@/utils/common'
-import {mapGetters} from 'vuex'
-
-dayjs().format()
+import {mapActions} from 'vuex'
 
 export default {
   name: 'SendContact',
   data: () => ({
     searchValue: '',
-    contactList: [],
+    contactList: [
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+      '0x69f57ccEF1C2c26d2B328F2EB1BD4377742f90F3',
+      '0xEE59279Fe9b5bDbe7D58E96233485225Da416042',
+    ],
   }),
   async mounted() {
     this.$refs.search.focus()
   },
   computed: {
-    ...mapGetters(['web3', 'address', 'balance', 'exchangeBalance', 'selectedExchange', 'txList', 'isLogged']),
+    filteredContactList() {
+      return this.searchValue === ''
+        ? this.contactList
+        : this.contactList
+          ?.filter(item => item.toLowerCase().includes(this.searchValue.toLowerCase()))
+    },
   },
   methods: {
+    ...mapActions(['updateSendTxData']),
+    gravatar(address) {
+      return toSvg(address, 30)
+    },
+    abbrAddress(address) {
+      return abbrAddress(address)
+    },
     onClickCancel() {
       this.emitter.emit('onWalletPagePop')
     },
     onClickClearSearchValue() {
       this.searchValue = ''
       this.$refs.search.focus()
+    },
+    async onClickSendTransaction(address) {
+      await this.updateSendTxData({
+        to: address,
+      })
+      this.emitter.emit('onWalletPagePush', 4)
     },
   },
 }

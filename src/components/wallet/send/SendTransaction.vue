@@ -2,41 +2,80 @@
   <div class='content'>
     <div class='title'>
       <div class='label'>
-        보낼 대상 :
-      </div>
-      <div
-        class='cancel'
-        @click='onClickCancel'
-      >
-        취소
+        보내기
       </div>
     </div>
-    <div class='search-input-box'>
+    <div class='send-info-box'>
       <div class='icon'>
-        <i class='bx bx-search-alt-2'/>
+        <i class='bx bxs-check-circle'/>
       </div>
-      <div class='input'>
-        <input
-          ref='search'
-          v-model='searchValue'
-          placeholder='검색, 공개 주소(0x)'
-          autofocus
-        />
+      <div class='address'>
+        <div class='abbr-address'>
+          {{ abbrAddress(sendTxData.to) }}
+        </div>
+        <div class='pure-address'>
+          {{ sendTxData.to }}
+        </div>
       </div>
       <div
         class='event'
-        @click='onClickClearSearchValue'
+        @click='onClickCancel'
       >
         <i class='bx bx-x'/>
       </div>
     </div>
     <div class='divider'/>
-    <div class='tx-list'>
+    <div class='send-input-box-list'>
+      <div class='item eth'>
+        <div class='label'>자산:</div>
+        <div class='input'>
+          <div class='icon'/>
+          <div class='description'>
+            <div class='label'>
+              잔액:
+            </div>
+            <div class='value'>
+              {{ currentBalance }} ETH
+            </div>
+          </div>
+          <input value='ETH' readonly>
+        </div>
+      </div>
       <div
-        v-for='(item, index) in contactList' :key='index'
         class='item'
+        @click='onClickFocusValue'
       >
-
+        <div class='label'>
+          금액:
+          <div class='max'>
+            최대
+          </div>
+        </div>
+        <div class='input'>
+          <input
+            ref='value'
+            v-model='value'
+            :style='{width: `${value.length * 10}px`}'
+          >
+          <div class='suffix'>
+            ETH
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='divider'/>
+    <div class='button-group'>
+      <div
+        class='button flat'
+        @click='onClickCancel'
+      >
+        <span>취소</span>
+      </div>
+      <div
+        class='button'
+        @click='onClickSubmit'
+      >
+        <span>다음</span>
       </div>
     </div>
   </div>
@@ -88,27 +127,31 @@
     }
   }
 
-  > .search-input-box {
+  > .send-info-box {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 36px;
+    width: 340px;
+    height: 60px;
     margin: 5px 0 20px 0;
-    border: 1px solid #fff;
+    border: 1px solid #CC4E8E;
     border-radius: 5px;
-    background: rgba(0, 0, 0, .1);
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, .6) inset;
+    background: rgba(255, 255, 255, .6);
 
     > .icon,
     > .event {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
+      width: 28px;
       margin: 1px 0 0;
-      color: #fff;
+      color: #1a1a1b;
       font-size: 24px;
+    }
+
+    > .icon {
+      color: #CC4E8E;
+      font-size: 18px;
     }
 
     > .event {
@@ -119,78 +162,137 @@
       }
     }
 
-    > .input {
+    > .address {
       display: flex;
       flex: 1;
+      flex-direction: column;
+      color: #1a1a1b;
 
-      > input {
-        width: 100%;
-        height: 24px;
-        border: 0;
-        background: transparent;
-        color: #fff;
-        font-size: 14px;
-        outline: none;
+      > .abbr-address {
+        font-size: 18px;
+        font-weight: bold;
+      }
 
-        &::placeholder {
-          color: #ccc;
-        }
+      > .pure-address {
+        margin: 0 0 2px 1px;
+        font-size: 12px;
+        word-wrap: break-word;
       }
     }
   }
 
-  > .item {
+  > .send-input-box-list {
     display: flex;
-    align-items: center;
-    width: 100%;
-    height: 80px;
-    position: relative;
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, .5);
-    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
-    overflow: hidden;
+    flex-direction: column;
 
-    &:not(:last-child) {
-      margin-bottom: 20px;
-    }
-
-    &.main > .backdrop {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      background-image: url(/public/ethereum.png);
-      background-repeat: no-repeat;
-      background-position: right center;
-      background-size: 35%;
-    }
-
-    > .icon {
+    > .item {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-      margin: 0 20px;
-      border: 1px solid #fff;
-      border-radius: 500rem;
-      background-color: rgba(255, 255, 255, .6);
-      background-image: url(/public/ethereum.png);
-      background-size: 60%;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
+      width: 340px;
+      height: 56px;
+      margin-bottom: 20px;
 
-    > .info {
-      > .balance {
-        color: #333;
-        font-size: 26px;
-        font-weight: bold;
+      > .label {
+        display: flex;
+        align-items: center;
+        width: 100px;
+        color: #fff;
+        font-size: 18px;
+
+        > .max {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 20px;
+          margin: 0 0 0 10px;
+          padding-bottom: 2px;
+          color: #CC4E8E;
+          font-size: 13px;
+          border-radius: 5px;
+          background-color: rgba(0, 0, 0, .25);
+          cursor: pointer;
+
+          &:active {
+            background-color: rgba(0, 0, 0, .1);
+          }
+        }
       }
 
-      > .exchange-balance {
-        margin-bottom: 5px;
-        color: #CC4E8E;
-        font-size: 14px;
+      > .event {
+        cursor: pointer;
+
+        &:active {
+          opacity: .8;
+        }
+      }
+
+      > .input {
+        display: flex;
+        position: relative;
+        width: 240px;
+        height: 56px;
+        border: 1px solid #fff;
+        border-radius: 5px;
+        background: rgba(0, 0, 0, .1);
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, .6) inset;
+
+        > .icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: absolute;
+          top: 12px;
+          left: 9px;
+          width: 30px;
+          height: 30px;
+          border: 1px solid #fff;
+          border-radius: 500rem;
+          background-color: rgba(255, 255, 255, .5);
+          background-image: url(/public/ethereum.png);
+          background-repeat: no-repeat;
+          background-size: 80%;
+          background-position: center;
+        }
+
+        > .description {
+          display: flex;
+          justify-content: space-between;
+          position: absolute;
+          top: 30px;
+          left: 50px;
+          color: #fff;
+          font-size: 13px;
+          opacity: .9;
+
+          > .label {
+            margin-right: 30px;
+          }
+        }
+
+        > input {
+          width: fit-content;
+          max-width: 170px;
+          height: 30px;
+          padding: 5px 20px 10px 10px;
+          border: 0;
+          background: transparent;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+
+          &::placeholder {
+            color: #ccc;
+          }
+        }
+
+        > .suffix {
+          padding: 8px 0;
+          color: #fff;
+        }
+      }
+
+      &.eth > .input > input {
+        padding-left: 50px;
       }
     }
   }
@@ -202,107 +304,34 @@
     background: #ffffff33;
   }
 
-  > .send {
+  > .button-group {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 36px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    background: #CC4E8E;
-    color: #fff;
-    font-size: 16px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, .25);
-    cursor: pointer;
 
-    > i {
-      margin-right: 5px;
-      font-size: 24px;
-    }
-
-    > span {
-      margin-bottom: 4px;
-    }
-  }
-
-  > .tx-list {
-    width: 340px;
-    height: 240px;
-    position: absolute;
-    top: 299px;
-    overflow-y: scroll;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    > .item {
+    > .button {
       display: flex;
       align-items: center;
-      width: 100%;
-      height: 80px;
-      margin-bottom: 10px;
-      position: relative;
-      border-radius: 5px;
-      background-color: rgba(255, 255, 255, .5);
-      box-shadow: 0 0 20px rgba(0, 0, 0, .1);
-      overflow: hidden;
+      justify-content: center;
+      width: 120px;
+      height: 36px;
+      margin: 0 10px 20px 10px;
+      border-radius: 10px;
+      background: #CC4E8E;
+      color: #fff;
+      font-size: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, .25);
       cursor: pointer;
 
-      &:hover {
-        opacity: .8;
+      &.flat {
+        background: #1a1a1b;
       }
 
-      &:last-child {
-        margin-bottom: 20px;
+      > i {
+        margin-right: 5px;
+        font-size: 24px;
       }
 
-      > .icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        margin: 0 5px 0 10px;
-        color: #CC4E8E;
-        font-size: 36px;
-      }
-
-      > .author-info,
-      > .balance-info {
-        > .label {
-          font-size: 16px;
-        }
-
-        > .datetime-address {
-          margin-top: 2px;
-          color: #6E777C;
-          font-size: 13px;
-
-          > span {
-            color: #CC4E8E;
-          }
-        }
-
-        > .balance {
-          color: #333;
-          font-size: 16px;
-        }
-
-        > .exchange-balance {
-          color: #6E777C;
-          font-size: 14px;
-        }
-      }
-
-      > .balance-info {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        align-items: flex-end;
-        margin-right: 10px;
+      > span {
+        margin-bottom: 4px;
       }
     }
   }
@@ -310,31 +339,40 @@
 </style>
 
 <script>
-import dayjs from 'dayjs'
 import {abbrAddress} from '@/utils/common'
-import {mapGetters} from 'vuex'
-
-dayjs().format()
+import {roundOffDecimals} from '@/utils/math'
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: 'SendTransaction',
   data: () => ({
-    searchValue: '',
-    contactList: [],
+    value: '0',
   }),
   async mounted() {
-    this.$refs.search.focus()
+    this.$refs.value.focus()
   },
   computed: {
-    ...mapGetters(['web3', 'address', 'balance', 'exchangeBalance', 'selectedExchange', 'txList', 'isLogged']),
+    ...mapGetters(['pureBalance', 'sendTxData']),
+    currentBalance() {
+      return roundOffDecimals(this.pureBalance, 8)
+    },
   },
   methods: {
-    onClickCancel() {
-      this.$emit('onClickIndex', 1)
+    ...mapActions(['updateSendTxData']),
+    abbrAddress(address) {
+      return abbrAddress(address)
     },
-    onClickClearSearchValue() {
-      this.searchValue = ''
-      this.$refs.search.focus()
+    onClickCancel() {
+      this.emitter.emit('onWalletPagePop')
+    },
+    async onClickSubmit() {
+      await this.updateSendTxData({
+        value: this.value,
+      })
+      this.emitter.emit('onWalletPagePush', 5)
+    },
+    onClickFocusValue() {
+      this.$refs.value.focus()
     },
   },
 }
