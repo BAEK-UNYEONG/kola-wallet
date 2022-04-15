@@ -66,6 +66,7 @@ export default createStore({
     SET_SEND_TX_DATA: (state, sendTxData = SEND_TX_DATA) => state.sendTxData = sendTxData,
   },
   actions: {
+    // TODO : 서비스단으로 분리 필요
     async loadApplication({dispatch}) {
       await dispatch('updateExchangeData')
     },
@@ -99,7 +100,7 @@ export default createStore({
         ...data,
       })
     },
-    async valueTransaction({dispatch, commit, getters}) {
+    async valueTransaction({dispatch, getters}) {
       const signer = getters.web3.eth.accounts.privateKeyToAccount(getters.privateKey)
       getters.web3.eth.accounts.wallet.add(signer)
       const tx = {
@@ -115,9 +116,10 @@ export default createStore({
           console.log(`Mining transaction ...`)
           console.log(`https://${getters.selectedHost}.etherscan.io/tx/${txhash}`)
         })
-
       console.log(`Mined in block ${receipt.blockNumber}`)
-      return receipt
+      await dispatch('updateBalance')
+      await dispatch('updateExchangeData')
+      await dispatch('updateTxList')
     },
   },
 })

@@ -253,7 +253,7 @@ export default {
     timer: null,
   }),
   async mounted() {
-    // await this.autoUpdateTxList()
+    await this.autoUpdateTxList()
   },
   computed: {
     ...mapGetters(['web3', 'address', 'balance', 'exchangeBalance', 'selectedExchange', 'txList', 'isLogged']),
